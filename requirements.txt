@@ -1,8 +1,9 @@
+flask
+numpy
+torch
+librosa
+soundfile
 fastapi
 uvicorn
 python-multipart
-jinja2
-numpy
 
-pandas
-pyarrow

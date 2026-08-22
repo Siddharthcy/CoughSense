@@ -11,7 +11,6 @@ data/processed/
 *.mp3
 *.flac
 
-*.pth
 *.pt
 
 .env
