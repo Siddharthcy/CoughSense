@@ -1,1 +1,5 @@
-﻿# Placeholder requirements file.
+fastapi
+uvicorn
+python-multipart
+jinja2
+numpy
