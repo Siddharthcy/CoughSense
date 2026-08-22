@@ -1,0 +1,3 @@
+﻿# CoughSense
+
+Project scaffold placeholder.
