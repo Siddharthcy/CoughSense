@@ -77,10 +77,29 @@ export default function ScreeningCard() {
       }
 
       const data = await res.json()
+      // Normalize server payloads: older Flask backend returns { result: { probability } }
+      // newer FastAPI backend may return { concerning, confidence } (confidence is 0-100).
       const payload = data?.result ?? data
-      if (!payload || typeof payload.probability !== "number") {
+
+      // Derive a canonical probability (0.0 - 1.0) from available fields.
+      let probability = null
+      if (payload && typeof payload.probability === "number" && Number.isFinite(payload.probability)) {
+        probability = payload.probability
+        // If backend returned a percentage in 0-100, convert to 0-1
+        if (probability > 1) probability = probability / 100.0
+      } else if (payload && typeof payload.confidence === "number" && Number.isFinite(payload.confidence)) {
+        probability = payload.confidence / 100.0
+      } else if (payload && typeof payload.probability === "string" && !Number.isNaN(Number(payload.probability))) {
+        probability = Number(payload.probability)
+        if (probability > 1) probability = probability / 100.0
+      }
+
+      if (probability === null || !Number.isFinite(probability)) {
         throw new Error("bad-payload")
       }
+
+      // Attach the normalized probability back onto the payload for downstream UI components.
+      payload.probability = Math.min(1, Math.max(0, probability))
 
       setResponseReady(true)
       const elapsed = Date.now() - startedAt
