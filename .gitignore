@@ -1,0 +1,17 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+data/raw/
+data/processed/
+
+*.parquet
+*.wav
+*.mp3
+*.flac
+
+*.pth
+*.pt
+
+.env
