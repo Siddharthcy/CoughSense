@@ -1,0 +1,123 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Inter', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, monospace;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-caution: var(--caution);
+  --color-caution-foreground: var(--caution-foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+}
+
+:root,
+.dark {
+  color-scheme: dark;
+
+  /* deep navy-black canvas */
+  --background: oklch(0.16 0.025 250);
+  --foreground: oklch(0.97 0.005 240);
+
+  /* glass panels */
+  --card: oklch(0.22 0.03 250);
+  --card-foreground: oklch(0.97 0.005 240);
+  --popover: oklch(0.2 0.03 250);
+  --popover-foreground: oklch(0.97 0.005 240);
+
+  /* cyan / teal accent */
+  --primary: oklch(0.82 0.13 195);
+  --primary-foreground: oklch(0.18 0.04 240);
+  --accent: oklch(0.72 0.12 190);
+  --accent-foreground: oklch(0.16 0.03 245);
+
+  --secondary: oklch(0.28 0.03 250);
+  --secondary-foreground: oklch(0.95 0.01 240);
+
+  --muted: oklch(0.26 0.025 250);
+  --muted-foreground: oklch(0.74 0.02 235);
+
+  /* caution amber for elevated-signal states */
+  --caution: oklch(0.82 0.13 78);
+  --caution-foreground: oklch(0.2 0.04 60);
+
+  --destructive: oklch(0.66 0.18 22);
+  --destructive-foreground: oklch(0.98 0.01 240);
+
+  --border: oklch(0.85 0.05 210 / 14%);
+  --input: oklch(0.85 0.05 210 / 18%);
+  --ring: oklch(0.82 0.13 195 / 55%);
+
+  --radius: 0.875rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    background: oklch(0.82 0.13 195 / 25%);
+  }
+}
+
+@utility glass {
+  background: linear-gradient(
+    160deg,
+    oklch(0.32 0.035 240 / 55%) 0%,
+    oklch(0.2 0.03 250 / 62%) 100%
+  );
+  backdrop-filter: blur(18px);
+  border: 1px solid oklch(0.85 0.05 210 / 12%);
+  box-shadow:
+    0 1px 0 0 oklch(1 0 0 / 6%) inset,
+    0 24px 60px -30px oklch(0.1 0.03 250 / 90%);
+}
+
+@utility glow-ring {
+  box-shadow:
+    0 0 0 1px oklch(0.82 0.13 195 / 25%),
+    0 0 40px -12px oklch(0.82 0.13 195 / 45%);
+}
+
+@utility grid-bg {
+  background-image: linear-gradient(
+      to right,
+      oklch(0.85 0.05 210 / 6%) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, oklch(0.85 0.05 210 / 6%) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility text-glow {
+  text-shadow: 0 0 30px oklch(0.82 0.13 195 / 35%);
+}
