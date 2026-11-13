@@ -11,7 +11,7 @@ import ResultCard from "@/components/result-card"
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function ScreeningCard() {
-  const [phase, setPhase] = useState("form") // form | analyzing | result
+  const [phase, setPhase] = useState("form")
   const [audio, setAudio] = useState(null)
   const [meta, setMeta] = useState({ age: "", gender: "", smoker: "" })
   const [error, setError] = useState(null)
@@ -77,15 +77,11 @@ export default function ScreeningCard() {
       }
 
       const data = await res.json()
-      // Normalize server payloads: older Flask backend returns { result: { probability } }
-      // newer FastAPI backend may return { concerning, confidence } (confidence is 0-100).
       const payload = data?.result ?? data
 
-      // Derive a canonical probability (0.0 - 1.0) from available fields.
       let probability = null
       if (payload && typeof payload.probability === "number" && Number.isFinite(payload.probability)) {
         probability = payload.probability
-        // If backend returned a percentage in 0-100, convert to 0-1
         if (probability > 1) probability = probability / 100.0
       } else if (payload && typeof payload.confidence === "number" && Number.isFinite(payload.confidence)) {
         probability = payload.confidence / 100.0
@@ -98,7 +94,6 @@ export default function ScreeningCard() {
         throw new Error("bad-payload")
       }
 
-      // Attach the normalized probability back onto the payload for downstream UI components.
       payload.probability = Math.min(1, Math.max(0, probability))
 
       setResponseReady(true)

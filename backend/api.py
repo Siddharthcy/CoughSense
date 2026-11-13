@@ -1,5 +1,6 @@
 import os
 import tempfile
+from typing import Optional
 import torch
 import torch.nn as nn
 import librosa
@@ -75,7 +76,6 @@ model = load_model()
 
 
 def process_audio(file_path: str):
-    # Safely load the temporary file from the disk
     y, sr = librosa.load(file_path, sr=22050)
     melspec = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128)
     melspec_db = librosa.power_to_db(melspec, ref=np.max)
@@ -90,17 +90,27 @@ def process_audio(file_path: str):
     tensor = torch.tensor(melspec_db, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
     return tensor
 
+SMOKER_VALUES = {
+    "smoker": "yes",
+    "non-smoker": "no",
+    "prefer-not-to-say": "unknown",
+}
+
+
+def normalize_smoker(smoker: Optional[str], smoker_status: str) -> str:
+    value = smoker if smoker is not None else smoker_status
+    key = (value or "").strip().lower()
+    return SMOKER_VALUES.get(key, key)
+
+
 def process_metadata(age: int, gender: str, smoker_status: str):
-    # Age
     age_val = float(age) / 100.0 
     
-    # Gender (One-Hot Encoded)
     gender = gender.lower()
     gender_male = 1.0 if gender == 'male' else 0.0
     gender_female = 1.0 if gender == 'female' else 0.0
     gender_other = 1.0 if gender not in ['male', 'female'] else 0.0
     
-    # Smoking Status
     smoker_status = smoker_status.lower()
     smoker_value = 1.0 if smoker_status == 'yes' else 0.0
     smoker_missing = 1.0 if smoker_status not in ['yes', 'no'] else 0.0
@@ -122,22 +132,20 @@ async def predict_cough(
     age: int = Form(...),
     gender: str = Form(...),
     smoker_status: str = Form("unknown"),
+    smoker: Optional[str] = Form(None),
     audio: UploadFile = File(...)
 ):
     try:
         audio_bytes = await audio.read()
         
-        # 1. Save audio to a temporary file safely
         with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
 
         try:
-            # 2. Process inputs
             audio_tensor = process_audio(tmp_path)
-            metadata_tensor = process_metadata(age, gender, smoker_status)
+            metadata_tensor = process_metadata(age, gender, normalize_smoker(smoker, smoker_status))
             
-            # 3. Run prediction
             with torch.no_grad():
                 outputs = model(audio_tensor, metadata_tensor)
                 probability = torch.sigmoid(outputs).item()
@@ -148,7 +156,6 @@ async def predict_cough(
             }
         
         finally:
-            # 4. ALWAYS delete the temp file, even if the model crashes
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
         

@@ -1,8 +1,3 @@
-"""
-CoughSense model definition moved from the working notebook.
-Do not change the architecture: this reproduces the exact class used to train the saved weights.
-"""
-
 import torch
 import torch.nn as nn
 
@@ -11,9 +6,6 @@ class CoughSenseModel(nn.Module):
     def __init__(self, metadata_dim=6, num_targets=1):
         super().__init__()
 
-        # -------------------------
-        # CNN branch: audio
-        # -------------------------
         self.cnn = nn.Sequential(
             nn.Conv2d(1, 16, kernel_size=3, padding=1),
             nn.BatchNorm2d(16),
@@ -39,9 +31,6 @@ class CoughSenseModel(nn.Module):
             nn.Dropout(0.3),
         )
 
-        # -------------------------
-        # MLP branch: metadata
-        # -------------------------
         self.metadata_mlp = nn.Sequential(
             nn.Linear(metadata_dim, 32),
             nn.ReLU(),
@@ -51,18 +40,12 @@ class CoughSenseModel(nn.Module):
             nn.ReLU(),
         )
 
-        # -------------------------
-        # Fusion
-        # -------------------------
         self.fusion = nn.Sequential(
             nn.Linear(128 + 32, 64),
             nn.ReLU(),
             nn.Dropout(0.3),
         )
 
-        # -------------------------
-        # Multi-task prediction heads
-        # -------------------------
         self.heads = nn.ModuleList([
             nn.Linear(64, 1) for _ in range(num_targets)
         ])

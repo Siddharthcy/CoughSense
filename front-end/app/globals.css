@@ -41,17 +41,14 @@
 .dark {
   color-scheme: dark;
 
-  /* deep navy-black canvas */
   --background: oklch(0.16 0.025 250);
   --foreground: oklch(0.97 0.005 240);
 
-  /* glass panels */
   --card: oklch(0.22 0.03 250);
   --card-foreground: oklch(0.97 0.005 240);
   --popover: oklch(0.2 0.03 250);
   --popover-foreground: oklch(0.97 0.005 240);
 
-  /* cyan / teal accent */
   --primary: oklch(0.82 0.13 195);
   --primary-foreground: oklch(0.18 0.04 240);
   --accent: oklch(0.72 0.12 190);
@@ -63,7 +60,6 @@
   --muted: oklch(0.26 0.025 250);
   --muted-foreground: oklch(0.74 0.02 235);
 
-  /* caution amber for elevated-signal states */
   --caution: oklch(0.82 0.13 78);
   --caution-foreground: oklch(0.2 0.04 60);
 

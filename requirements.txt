@@ -1,8 +1,10 @@
 flask
+flask-cors
 numpy
 torch
 librosa
 soundfile
+imageio-ffmpeg
 fastapi
 uvicorn
 python-multipart

@@ -17,7 +17,6 @@ export default function Page() {
 
   return (
     <div id="top" className="relative min-h-screen overflow-x-hidden">
-      {/* ambient background */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
         <div className="grid-bg absolute inset-0 opacity-60" />
         <div

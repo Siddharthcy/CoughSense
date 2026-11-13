@@ -2,14 +2,6 @@
 
 import { useEffect, useRef } from "react"
 
-/**
- * Canvas waveform visualizer.
- *
- * mode:
- *  - "idle"      -> gentle breathing bars
- *  - "live"      -> driven by an AnalyserNode (analyser prop)
- *  - "static"    -> renders a fixed peaks array (peaks prop), with optional progress
- */
 export default function WaveformVisualizer({
   mode = "idle",
   analyser = null,
@@ -73,7 +65,6 @@ export default function WaveformVisualizer({
           const p = peaks[Math.floor((i / count) * peaks.length)] ?? 0.05
           target = Math.max(0.05, p)
         } else {
-          // idle: layered sine field, calm and continuous
           const x = i / count
           const env = Math.sin(Math.PI * x) ** 0.8
           target =
@@ -116,7 +107,6 @@ export default function WaveformVisualizer({
 
     draw()
     if (mode === "static") {
-      // static still needs one paint on resize
       const id = setTimeout(draw, 60)
       return () => {
         dead = true
